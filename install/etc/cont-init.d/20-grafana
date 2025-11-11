@@ -5,6 +5,32 @@ prepare_service single
 prepare_service 03-monitoring
 PROCESS_NAME="grafana"
 
+cat <<EOF
+
+***************************************************************************************
+*                                                                                     *
+*                    END OF LIFE NOTICE AUGUST 18, 2025                               *
+*                               tiredofit/grafana                                     *
+*                                                                                     *
+* This image is no longer maintained as of and will not receive updates.              *
+*                                                                                     *
+* A successor image is available at:                                                  *
+*                                                                                     *
+* Repository | Documentation:                                                         *
+*   - https://github.com/nfrastack/container-grafana                                  *
+*                                                                                     *
+* Image Registries:                                                                   *
+*   - https://hub.docker.com/r/nfrastack/grafana                                      *
+*   - https://github.com/nfrastack/container-grafana/pkgs/container/container-grafana *
+*                                                                                     *
+* Please visit https://nfrastack.com for more information.                            *
+*                                                                                     *
+***************************************************************************************
+
+EOF
+
+sleep 15
+
 sanity_var APP_URL "Full address of application"
 bootstrap_directories
 configure_monitoring
