@@ -1,4 +1,10 @@
-## 1.0.99 2025-11-10 <dave at tiredofit dot ca>
+## 1.1.0pre 2025-08-13 <code at nfrastack dot com>
+
+   ### Changed
+      - Changed base image
+      - Grafana 12.2.1
+
+## 1.0.99 025-11-10 <dave at tiredofit dot ca>
 
 Add EOL notice and deprecate image
 
@@ -259,9 +265,9 @@ Add EOL notice and deprecate image
    ### Added
       - Grafana 10.2.1
       - Customizable Database engine
-   
+
   ### Changed
-      - Fixed some deprecated configs 
+      - Fixed some deprecated configs
 
 ## 0.0.83 2023-11-14 <dave at tiredofit dot ca>
 

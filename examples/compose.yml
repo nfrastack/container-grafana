@@ -1,8 +1,7 @@
-version: '2.4'
 services:
 
   grafana-app:
-    image: tiredofit/grafana:latest
+    image: docker.io/nfrastack/grafana:latest
     container_name: grafana-app
     labels:
       - traefik.enable=true
@@ -14,17 +13,16 @@ services:
       - ./logs:/logs
     environment:
       - TIMEZONE=America/Vancouver
-      - CONTAINER_NAME=grafana-app
     networks:
       - proxy
       - services
     restart: always
 
   grafana-db:
-    image: tiredofit/mariadb:latest
+    image: docker.io/nfrastack/mariadb:11.8
     container_name: grafana-db
     volumes:
-      - ./mariadb:/var/lib/mysql
+      - ./db:/data
       - ./logs/mariadb:/logs
     environment:
       - TIMEZONE=America/Vancouver
@@ -36,7 +34,7 @@ services:
       - DB_PASS=user_password
     networks:
       - services
-    restart: always    
+    restart: always
 
 networks:
   proxy:

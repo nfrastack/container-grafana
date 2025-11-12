@@ -1,36 +1,26 @@
-#!/command/with-contenv bash
+# SPDX-FileCopyrightText: © 2025 Nfrastack <code@nfrastack.com>
+#
+# SPDX-License-Identifier: MIT
 
-bootstrap_directories() {
-    mkdir -p "${CONFIG_PATH}"
-    mkdir -p "${DATA_PATH}"
-    mkdir -p "${LOG_PATH}"
-    mkdir -p "${PLUGINS_PATH}"
-    mkdir -p "${PROVISIONING_PATH}"
-    mkdir -p "${PROVISIONING_PATH}"/access-control \
-             "${PROVISIONING_PATH}"/datasources \
-             "${PROVISIONING_PATH}"/dashboards \
-             "${PROVISIONING_PATH}"/notifiers \
-             "${PROVISIONING_PATH}"/plugins
-             \
-    chown -R grafana:grafana \
-                "${CONFIG_PATH}" \
-                "${DATA_PATH}" \
-                "${LOG_PATH}" \
-                "${PLUGINS_PATH}" \
-                "${PROVISIONING_PATH}"
-    ## Official docker image is stating chmod 777 all the above. wtf
+grafana_bootstrap_filesystem() {
+    create_folder \
+                "${CONFIG_PATH},\
+                ${DATA_PATH},\
+                ${LOG_PATH},\
+                ${PLUGINS_PATH}" \
+                grafana:grafana 755
 
     if [ ! -f "${CONFIG_PATH}/${CONFIG_FILE}" ] ; then
-        sudo -u grafana touch "${CONFIG_PATH}"/"${CONFIG_FILE}"
+        sudo -u grafana touch "${CONFIG_PATH%/}"/"${CONFIG_FILE}"
     fi
-    echo "alias grafana-cli=\"sudo -u grafana grafana-cli --pluginsDir ${PLUGINS_PATH} --homepath ${HOME_PATH}\"" >> /root/.bashrc
+    echo "alias grafana-cli=\"sudo -u grafana grafana-cli --pluginsDir ${PLUGINS_PATH} --homepath ${HOME_PATH}\"" | silent tee /root/.bashrc
 }
 
-configure_monitoring() {
+grafana_configure_monitoring() {
     create_zabbix grafana
 }
 
-install_plugins() {
+grafana_install_plugins() {
     if [ -n "${INSTALL_PLUGINS}" ]; then
         OLDIFS=$IFS
         IFS=','
@@ -52,12 +42,12 @@ install_plugins() {
     fi
 
     #if [ ! "$(ls -A $PLUGINS_PATH)" ]; then
-    #    cp -aR /assets/grafana/plugins/* ${PLUGINS_PATH}/
+    #    cp -aR /container/data/grafana/plugins/* ${PLUGINS_PATH}/
     #fi
 }
 
-create_configuration() {
-    if [ "${SETUP_TYPE}" = "AUTO" ] || [ "${SETUP_TYPE}" = "auto" ] ; then
+grafana_configure_application() {
+    if [ "${SETUP_TYPE,,}" = "auto" ] ; then
         print_debug "Configuring Grafana"
         if var_true "${ENABLE_OAUTH}" ; then
             print_debug "Configuring Oauth"
@@ -96,7 +86,7 @@ EOF
         fi
 #--- DB
 
-    cat <<EOF > "${CONFIG_PATH}"/"${CONFIG_FILE}"
+    cat <<EOF | silent tee "${CONFIG_PATH%/}"/"${CONFIG_FILE}"
 
 [server]
 protocol = ${LISTEN_PROTOCOL}
@@ -206,9 +196,9 @@ EOF
         print_debug "Not Autoconfiguring Grafana"
     fi
 }
-configure_aws() {
+grafana_configure_storage_aws() {
     if [ ! -z ${AWS_PROFILES+x} ]; then
-        > "${HOME_PATH}/.aws/credentials"
+        touch "${HOME_PATH}/.aws/credentials"
 
         for profile in ${AWS_PROFILES}; do
             access_key_varname="AWS_${profile}_ACCESS_KEY_ID"
@@ -216,11 +206,14 @@ configure_aws() {
             region_varname="AWS_${profile}_REGION"
 
             if [ ! -z "${!access_key_varname}" -a ! -z "${!secret_key_varname}" ]; then
-                echo "[${profile}]" >> "${HOME_PATH}/.aws/credentials"
-                echo "aws_access_key_id = ${!access_key_varname}" >> "${HOME_PATH}/.aws/credentials"
-                echo "aws_secret_access_key = ${!secret_key_varname}" >> "${HOME_PATH}/.aws/credentials"
+                cat <<EOF | silent tee -a "${HOME_PATH}/.aws/credentials"
+[${profile}]
+aws_access_key_id = ${!access_key_varname}
+aws_secret_access_key = ${!secret_key_varname}
+EOF
+
                 if [ ! -z "${!region_varname}" ]; then
-                    echo "region = ${!region_varname}" >> "${HOME_PATH}/.aws/credentials"
+                    echo "region = ${!region_varname}" | silent tee -a "${HOME_PATH}/.aws/credentials"
                 fi
             fi
         done
