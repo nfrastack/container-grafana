@@ -2,6 +2,8 @@
 #
 # SPDX-License-Identifier: MIT
 
+DATA_PATH=${DATA_PATH:-"/data/"}
+
 ANONYMOUS_HIDE_VERSION=${ANONYMOUS_HIDE_VERSION:-"TRUE"}
 ANONYMOUS_ORG_NAME=${ANONYMOUS_ORG_NAME:-"Main Org."}
 ANONYMOUS_ROLE=${ANONYMOUS_ROLE:-"Viewer"}
@@ -10,7 +12,6 @@ AUTO_ASSIGN_ORG_ROLE=${AUTO_ASSIGN_ORG_ROLE:-"Viewer"}
 CONFIG_FILE=${CONFIG_FILE:-"config.ini"}
 CONFIG_PATH=${CONFIG_PATH:-"/config/"}
 COOKIE_NAME=${COOKIE_NAME:-"grafana_session"}
-DATA_PATH=${DATA_PATH:-"/data/"}
 DB_HOST=${DB_HOST:-"localhost"}
 DB_NAME=${DB_NAME:-"grafana"}
 DB_PASS=${DB_PASS:-"password"}
