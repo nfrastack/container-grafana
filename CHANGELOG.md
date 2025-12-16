@@ -2,7 +2,7 @@
 
    ### Changed
       - Changed base image
-      - Grafana 12.2.1
+      - Grafana 12.3.1
 
 ## 1.0.99 025-11-10 <dave at tiredofit dot ca>
 
