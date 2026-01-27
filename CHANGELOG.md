@@ -3,6 +3,7 @@
    ### Changed
       - Changed base image
       - Grafana 12.3.2
+      - Alpine 3.23 base
 
 ## 1.0.99 025-11-10 <dave at tiredofit dot ca>
 
