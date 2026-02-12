@@ -18,7 +18,7 @@ LABEL \
         org.opencontainers.image.licenses="MIT"
 
 ARG \
-    GRAFANA_VERSION="v12.3.2" \
+    GRAFANA_VERSION="v12.3.3" \
     GRAFANA_REPO_URL="https://github.com/grafana/grafana"
 
 COPY CHANGELOG.md /usr/src/container/CHANGELOG.md
