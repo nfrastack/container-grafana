@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: © 2025 Nfrastack <code@nfrastack.com>
+# SPDX-FileCopyrightText: © 2026 Nfrastack <code@nfrastack.com>
 #
 # SPDX-License-Identifier: MIT
 
@@ -196,6 +196,14 @@ EOF
         print_debug "Not Autoconfiguring Grafana"
     fi
 }
+
+grafana_configure_proxy() {
+    if var_true "${ENABLE_NGINX}" ; then
+        print_debug "Configuring Nginx proxy for Grafana"
+        update_template /container/data/nginx/sites.enabled/grafana LISTEN_PORT
+    fi
+}
+
 grafana_configure_storage_aws() {
     if [ ! -z ${AWS_PROFILES+x} ]; then
         touch "${HOME_PATH}/.aws/credentials"

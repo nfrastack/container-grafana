@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: © 2025 Nfrastack <code@nfrastack.com>
+# SPDX-FileCopyrightText: © 2026 Nfrastack <code@nfrastack.com>
 #
 # SPDX-License-Identifier: MIT
 
@@ -26,14 +26,18 @@ COPY LICENSE /usr/src/container/LICENSE
 COPY README.md /usr/src/container/README.md
 
 ENV \
-    NGINX_ENABLE_CREATE_SAMPLE_HTML=FALSE \
-    NGINX_SITE_ENABLED=grafana \
     IMAGE_NAME="nfrastack/grafana" \
     IMAGE_REPO_URL="https://github.com/nfrastack/container-grafana/"
 
 EXPOSE 3000
 
 RUN echo "" && \
+    BUILD_ENV=" \
+                ENABLE_NGINX=FALSE \
+                NGINX_ENABLE_CREATE_SAMPLE_HTML=FALSE \
+                NGINX_SITE_ENABLED=grafana \
+              " \
+              && \
     GRAFANA_BUILD_DEPS_ALPINE=" \
                                 gcc \
                                 make \

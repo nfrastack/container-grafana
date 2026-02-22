@@ -1,9 +1,10 @@
-## 1.1.0pre 2025-08-13 <code at nfrastack dot com>
+## 1.1.0 2026-02-22 <code at nfastack dot com>
 
-   ### Changed
-      - Changed base image
-      - Grafana 12.3.3
-      - Alpine 3.23 base
+   ### Added
+      - 4 Changed base image to nfrastack/nginx:8.x
+      - 5 Grafana 12.3.3
+      - 6 Alpine 3.23 base
+
 
 ## 1.0.99 025-11-10 <dave at tiredofit dot ca>
 
