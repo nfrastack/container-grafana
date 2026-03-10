@@ -18,7 +18,7 @@ LABEL \
         org.opencontainers.image.licenses="MIT"
 
 ARG \
-    GRAFANA_VERSION="v12.3.3" \
+    GRAFANA_VERSION="v12.4.1" \
     GRAFANA_REPO_URL="https://github.com/grafana/grafana"
 
 COPY CHANGELOG.md /usr/src/container/CHANGELOG.md
@@ -33,9 +33,9 @@ EXPOSE 3000
 
 RUN echo "" && \
     BUILD_ENV=" \
-                ENABLE_NGINX=FALSE \
-                NGINX_ENABLE_CREATE_SAMPLE_HTML=FALSE \
-                NGINX_SITE_ENABLED=grafana \
+                10-nginx/ENABLE_NGINX=FALSE \
+                10-nginx/NGINX_ENABLE_CREATE_SAMPLE_HTML=FALSE \
+                10-nginx/NGINX_SITE_ENABLED=grafana \
               " \
               && \
     GRAFANA_BUILD_DEPS_ALPINE=" \
