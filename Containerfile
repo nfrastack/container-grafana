@@ -44,7 +44,7 @@ RUN echo "" && \
                                 musl-dev \
                                 nodejs \
                                 npm \
-                                yarn \
+   #                             yarn \
                             " \
                             && \
     GRAFANA_RUN_DEPS_ALPINE=" \
@@ -66,12 +66,12 @@ RUN echo "" && \
                         && \
     package build go && \
     \
+    npm install -g yarn && \
     clone_git_repo "${GRAFANA_REPO_URL}" "${GRAFANA_VERSION}" /usr/src/grafana && \
     make && \
+    strip /usr/src/grafana/bin/linux/$(container_info arch alt)/grafana && \
     cp -aR \
-            /usr/src/grafana/bin/linux-$(container_info arch alt)/grafana \
-            /usr/src/grafana/bin/linux-$(container_info arch alt)/grafana-cli \
-            /usr/src/grafana/bin/linux-$(container_info arch alt)/grafana-server \
+            /usr/src/grafana/bin/linux/$(container_info arch alt)/grafana \
                 /usr/local/sbin && \
     mkdir -p /usr/share/grafana && \
     cp -aR \
@@ -80,6 +80,7 @@ RUN echo "" && \
                 /usr/share/grafana && \
     chown -R grafana:grafana /usr/share/grafana && \
     container_build_log add "Grafana" "${GRAFANA_VERSION}" "${GRAFANA_REPO_URL}" && \
+    npm uninstall -g yarn && \
     package remove \
                         GRAFANA_BUILD_DEPS && \
     package cleanup

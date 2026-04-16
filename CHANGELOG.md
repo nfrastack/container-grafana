@@ -1,3 +1,10 @@
+## 1.1.5 2026-04-15 <code at nfastack dot com>
+
+   ### Changed
+      - Optimize build for 13.0.0
+      - Convert grafana-cli and grafana-server commands to grafana <type>
+
+
 ## 1.1.4 2026-04-14 <code at nfastack dot com>
 
    ### Added

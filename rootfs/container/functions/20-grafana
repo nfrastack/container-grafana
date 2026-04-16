@@ -13,7 +13,7 @@ grafana_bootstrap_filesystem() {
     if [ ! -f "${CONFIG_PATH}/${CONFIG_FILE}" ] ; then
         sudo -u grafana touch "${CONFIG_PATH%/}"/"${CONFIG_FILE}"
     fi
-    echo "alias grafana-cli=\"sudo -u grafana grafana-cli --pluginsDir ${PLUGINS_PATH} --homepath ${HOME_PATH}\"" | silent tee /root/.bashrc
+    echo "alias grafana-cli=\"sudo -u grafana grafana cli --pluginsDir ${PLUGINS_PATH} --homepath ${HOME_PATH}\"" | silent tee /root/.bashrc
 }
 
 grafana_configure_monitoring() {
@@ -29,15 +29,15 @@ grafana_install_plugins() {
             if expr match "$plugin" '.*\;.*'; then
                 pluginUrl=$(echo "$plugin" | cut -d';' -f 1);
                 pluginInstallFolder=$(echo "$plugin" | cut -d';' -f 2);
-                sudo -u grafana grafana-cli --pluginUrl "${pluginUrl}" --pluginsDir "${PLUGINS_PATH}" plugins install "${pluginInstallFolder}";
+                sudo -u grafana grafana cli --pluginUrl "${pluginUrl}" --pluginsDir "${PLUGINS_PATH}" plugins install "${pluginInstallFolder}";
             else
-                sudo -u grafana grafana-cli --pluginsDir "${PLUGINS_PATH}" plugins install "${plugin}";
+                sudo -u grafana grafana cli --pluginsDir "${PLUGINS_PATH}" plugins install "${plugin}";
             fi
         done
     fi
 
     if var_true "${PLUGINS_AUTO_UPDATE}" ; then
-        sudo -u grafana grafana-cli --pluginsDir "${PLUGINS_PATH}" plugins update-all
+        sudo -u grafana grafana cli --pluginsDir "${PLUGINS_PATH}" plugins update-all
         echo "0 0 * * *  sudo -u grafana grafana --pluginsDir "${PLUGINS_PATH}" plugins update-all; pkill grafana "
     fi
 
@@ -84,9 +84,8 @@ EOF
             database_config=''
             print_debug "SQLite database detected. No additional configuration needed."
         fi
-#--- DB
 
-    cat <<EOF | silent tee "${CONFIG_PATH%/}"/"${CONFIG_FILE}"
+    write_file "${CONFIG_PATH%/}"/"${CONFIG_FILE}" <<EOF
 
 [server]
 protocol = ${LISTEN_PROTOCOL}
@@ -214,7 +213,7 @@ grafana_configure_storage_aws() {
             region_varname="AWS_${profile}_REGION"
 
             if [ ! -z "${!access_key_varname}" -a ! -z "${!secret_key_varname}" ]; then
-                cat <<EOF | silent tee -a "${HOME_PATH}/.aws/credentials"
+                write_file -a "${HOME_PATH}/.aws/credentials" <<EOF
 [${profile}]
 aws_access_key_id = ${!access_key_varname}
 aws_secret_access_key = ${!secret_key_varname}
